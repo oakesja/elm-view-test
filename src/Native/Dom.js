@@ -6,11 +6,16 @@ var _user$project$Native_Dom = function () {
   }
 
   var toHtml = function (node) {
-    if (node.type === 'node') {
-      return openTag(node) + tagContent(node) + closeTag(node)
-    } else if (node.type === 'text') {
+    if (node.type === 'text')
       return node.text
-    }
+    if (node.type === 'node')
+      return openTag(node) + tagContent(node) + closeTag(node)
+    if (node.type === 'keyed-node')
+      return openTag(node) + keyedTagContent(node) + closeTag(node)
+    if (node.type === 'tagger')
+      return toHtml(node.node)
+    if (node.type === 'thunk')
+      return toHtml(node.thunk())
     return ''
   }
 
@@ -34,6 +39,14 @@ var _user$project$Native_Dom = function () {
     var content = ''
     for (var i = 0; i < node.children.length; i++) {
       content += toHtml(node.children[i])
+    }
+    return content
+  }
+
+  var keyedTagContent = function (node) {
+    var content = ''
+    for (var i = 0; i < node.children.length; i++) {
+      content += toHtml(node.children[i]._1)
     }
     return content
   }
@@ -65,10 +78,9 @@ var _user$project$Native_Dom = function () {
   var findById = function (id, cheerioInstance) {
     var ele = cheerioInstance('#' + id)
     if (ele) {
-      console.log(ele.length)
+      // console.log(ele.length)
       return _elm_lang$core$Maybe$Just(ele)
     } else {
-      console.log('nothing')
       return _elm_lang$core$Maybe$Nothing
     }
   }

@@ -11,7 +11,7 @@ import ToHtmlTests
 
 all : Test
 all =
-    describe "A Test Suite"
+    describe "Dom"
         [ test "Shows a string" <|
             \() ->
                 view "test"
