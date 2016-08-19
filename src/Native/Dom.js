@@ -35,9 +35,32 @@ var _user$project$Native_Dom = function () {
     httpEquiv: 'http-equiv'
   }
 
-  var createAttribute = function (name, value) {
-    var attrName = (specialAttributeNames[name] || name)
+  var createAttribute = function (key, value) {
+    if (key === 'STYLE') {
+      var style = ''
+      for (var attr in value) {
+        style += paramCase(attr) + ': ' + value[attr] + '; '
+      }
+      if (style.length > 0) {
+        return ' style="' + style.trim() + '"'
+      }   else {
+        return ''
+      }
+    }
+    var attrName = (specialAttributeNames[key] || key)
     return ' ' + attrName + '="' + value + '"'
+  }
+
+  var paramCase = function (str) {
+    var newStr = ''
+    for (var i = 0; i < str.length; i++) {
+      var c = str.charAt(i)
+      if (c.match(/[A-Z]/)) {
+        newStr += '-'
+      }
+      newStr += c.toLowerCase()
+    }
+    return newStr
   }
 
   var tagContent = function (node) {

@@ -7,6 +7,7 @@ import Html.App
 import Html.Attributes exposing (..)
 import Html.Keyed
 import Html.Lazy
+import Json.Encode
 import VirtualDom
 import Dom
 
@@ -90,19 +91,42 @@ htmlAttributes =
             \() ->
                 a [ downloadAs "test.txt" ] []
                     |> expectHtmlString "<a download=\"test.txt\"></a>"
-          -- classList
-          -- type'
-          -- custom
+        , test "classList combines the applicable classes into a single string" <|
+            \() ->
+                div [ classList [ ( "class1", True ), ( "class2", False ), ( "class3", True ) ] ] []
+                    |> expectHtmlString "<div class=\"class1 class3\"></div>"
+        , test "type' maps to type" <|
+            \() ->
+                button [ type' "submit" ] []
+                    |> expectHtmlString "<button type=\"submit\"></button>"
+        , test "style attributes are combined into a single string" <|
+            \() ->
+                div
+                    [ style
+                        [ ( "backgroundColor", "red" )
+                        , ( "height", "90px" )
+                        , ( "width", "100%" )
+                        ]
+                    ]
+                    []
+                    |> expectHtmlString "<div style=\"background-color: red; height: 90px; width: 100%;\"></div>"
+        , test "" <|
+            \() ->
+                div [ style [] ]
+                    []
+                    |> expectHtmlString "<div></div>"
         ]
 
 
 
 {--
 attributes to watch out for
-style
 data-*
-odd named attributes https://github.com/nthtran/vdom-to-html/blob/master/property-config.js
 attributes with booleans https://github.com/nthtran/vdom-to-html/blob/master/create-attribute.js#L32
+attributeNS  https://github.com/elm-lang/virtual-dom/blob/master/src/Native/VirtualDom.js#L1455
+attribute vs property
+
+void elements https://github.com/nthtran/vdom-to-html/blob/master/void-elements.js
 
 
 attributes per html tag such as accept-charset is only for forms http://package.elm-lang.org/packages/elm-lang/html/1.1.0/Html-Attributes
