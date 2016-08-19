@@ -22,17 +22,22 @@ var _user$project$Native_Dom = function () {
   var openTag = function (node) {
     var ret = '<' + node.tag
     for (var key in node.facts) {
-      if (key === 'className') {
-        ret += property('class', node.facts[key])
-      } else {
-        ret += property(key, node.facts[key])
-      }
+      ret += createAttribute(key, node.facts[key])
     }
     return ret + '>'
   }
 
-  var property = function (name, value) {
-    return ' ' + name + '="' + value + '"'
+  var specialAttributeNames = {
+    acceptCharset: 'accept-charset',
+    className: 'class',
+    defaultValue: 'value',
+    htmlFor: 'for',
+    httpEquiv: 'http-equiv'
+  }
+
+  var createAttribute = function (name, value) {
+    var attrName = (specialAttributeNames[name] || name)
+    return ' ' + attrName + '="' + value + '"'
   }
 
   var tagContent = function (node) {
