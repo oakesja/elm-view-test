@@ -44,6 +44,10 @@ var _user$project$Native_Dom = function () {
     if (key === 'EVENT') {
       return ''
     }
+    if (key === 'ATTR') {
+      var attrName = Object.keys(value)[0]
+      return ' ' + attrName + '="' + value[attrName] + '"'
+    }
     if (key === 'STYLE') {
       var style = ''
       for (var attr in value) {

@@ -124,18 +124,22 @@ htmlAttributes =
                 div [ Html.Events.onClick () ]
                     []
                     |> expectHtmlString "<div></div>"
+        , test "custom attributes" <|
+            \() ->
+                VirtualDom.node "div"
+                    [ VirtualDom.attribute "class" "testClass" ]
+                    []
+                    |> expectHtmlString "<div class=\"testClass\"></div>"
         ]
 
 
 
 {--
+attribute vs property
+look at https://github.com/facebook/react/blob/master/src/renderers/dom/shared/HTMLDOMPropertyConfig.js
+void elements https://github.com/nthtran/vdom-to-html/blob/master/void-elements.js
 attributes with booleans https://github.com/nthtran/vdom-to-html/blob/master/create-attribute.js#L32
 attributeNS  https://github.com/elm-lang/virtual-dom/blob/master/src/Native/VirtualDom.js#L1455
-attribute vs property
-
-void elements https://github.com/nthtran/vdom-to-html/blob/master/void-elements.js
-
-look at https://github.com/facebook/react/blob/master/src/renderers/dom/shared/HTMLDOMPropertyConfig.js
 --}
 
 
