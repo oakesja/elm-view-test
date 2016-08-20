@@ -5,11 +5,15 @@ import Expect exposing (Expectation)
 import Html exposing (..)
 import Html.App
 import Html.Attributes exposing (..)
+import Html.Events
 import Html.Keyed
 import Html.Lazy
 import Json.Encode
 import VirtualDom
 import Dom
+
+
+-- rename to virtual dom tests
 
 
 all : Test
@@ -110,9 +114,14 @@ htmlAttributes =
                     ]
                     []
                     |> expectHtmlString "<div style=\"background-color: red; height: 90px; width: 100%;\"></div>"
-        , test "" <|
+        , test "style with an empty list of attributes is ignored" <|
             \() ->
                 div [ style [] ]
+                    []
+                    |> expectHtmlString "<div></div>"
+        , test "events are ignored" <|
+            \() ->
+                div [ Html.Events.onClick () ]
                     []
                     |> expectHtmlString "<div></div>"
         ]
@@ -120,25 +129,13 @@ htmlAttributes =
 
 
 {--
-attributes to watch out for
-data-*
 attributes with booleans https://github.com/nthtran/vdom-to-html/blob/master/create-attribute.js#L32
 attributeNS  https://github.com/elm-lang/virtual-dom/blob/master/src/Native/VirtualDom.js#L1455
 attribute vs property
 
 void elements https://github.com/nthtran/vdom-to-html/blob/master/void-elements.js
 
-
-attributes per html tag such as accept-charset is only for forms http://package.elm-lang.org/packages/elm-lang/html/1.1.0/Html-Attributes
-
-validation for things such as http://www.w3schools.com/tags/att_meta_http_equiv.asp
-
 look at https://github.com/facebook/react/blob/master/src/renderers/dom/shared/HTMLDOMPropertyConfig.js
-
-other tests
-svg
-events are ignored
-
 --}
 
 

@@ -1,6 +1,11 @@
 var _user$project$Native_Dom = function () {
   var cheerio = require('cheerio')
 
+  // var STYLE_KEY = 'STYLE'
+  // var EVENT_KEY = 'EVENT'
+  // var ATTR_KEY = 'ATTR'
+  // var ATTR_NS_KEY = 'ATTR_NS'
+
   var htmlToString = function (html) {
     return toHtml(html)
   }
@@ -36,6 +41,9 @@ var _user$project$Native_Dom = function () {
   }
 
   var createAttribute = function (key, value) {
+    if (key === 'EVENT') {
+      return ''
+    }
     if (key === 'STYLE') {
       var style = ''
       for (var attr in value) {

@@ -12,3 +12,10 @@ example
 # Running tests
 
 # How it work
+
+# Future Work
+html runner
+
+attributes per html tag such as accept-charset is only for forms http://package.elm-lang.org/packages/elm-lang/html/1.1.0/Html-Attributes
+
+validation for things such as http://www.w3schools.com/tags/att_meta_http_equiv.asp
