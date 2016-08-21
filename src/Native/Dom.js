@@ -6,6 +6,25 @@ var _user$project$Native_Dom = function () {
   // var ATTR_KEY = 'ATTR'
   // var ATTR_NS_KEY = 'ATTR_NS'
 
+  var VOID_ELEMENTS = {
+    'area': true,
+    'base': true,
+    'br': true,
+    'col': true,
+    'command': true,
+    'embed': true,
+    'hr': true,
+    'img': true,
+    'input': true,
+    'keygen': true,
+    'link': true,
+    'meta': true,
+    'param': true,
+    'source': true,
+    'track': true,
+    'wbr': true
+  }
+
   var htmlToString = function (html) {
     return toHtml(html)
   }
@@ -92,6 +111,9 @@ var _user$project$Native_Dom = function () {
   }
 
   var closeTag = function (node) {
+    if (VOID_ELEMENTS[node.tag]) {
+      return ''
+    }
     return '</' + node.tag + '>'
   }
 

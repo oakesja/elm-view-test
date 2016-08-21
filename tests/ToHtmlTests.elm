@@ -21,6 +21,7 @@ all =
     describe "htmlToString"
         [ typesOfDomNodesTests
         , htmlAttributes
+        , voidElementTest
         ]
 
 
@@ -82,15 +83,11 @@ htmlAttributes =
         , test "htmlFor maps to for" <|
             \() ->
                 VirtualDom.node "meta" [ httpEquiv "refresh" ] []
-                    |> expectHtmlString "<meta http-equiv=\"refresh\"></meta>"
-        , test "defaultText maps to value" <|
+                    |> expectHtmlString "<meta http-equiv=\"refresh\">"
+        , test "defaultValue maps to value" <|
             \() ->
                 input [ defaultValue "defaultText" ] []
-                    |> expectHtmlString "<input value=\"defaultText\"></input>"
-        , test "defaultText maps to value" <|
-            \() ->
-                input [ defaultValue "defaultText" ] []
-                    |> expectHtmlString "<input value=\"defaultText\"></input>"
+                    |> expectHtmlString "<input value=\"defaultText\">"
         , test "downloadAs maps to download" <|
             \() ->
                 a [ downloadAs "test.txt" ] []
@@ -133,11 +130,42 @@ htmlAttributes =
         ]
 
 
+voidElementTest : Test
+voidElementTest =
+    let
+        voidElements =
+            [ ( "area", VirtualDom.node "area" )
+            , ( "base", VirtualDom.node "base" )
+            , ( "br", br )
+            , ( "col", col )
+            , ( "command", VirtualDom.node "command" )
+            , ( "embed", embed )
+            , ( "hr", hr )
+            , ( "img", img )
+            , ( "input", input )
+            , ( "keygen", keygen )
+            , ( "link", VirtualDom.node "link" )
+            , ( "meta", VirtualDom.node "meta" )
+            , ( "param", VirtualDom.node "param" )
+            , ( "source", VirtualDom.node "source" )
+            , ( "track", track )
+            , ( "wbr", VirtualDom.node "wbr" )
+            ]
+    in
+        describe "it can handle html elements that are should not have an end tag" <|
+            List.map
+                (\( name, htmlTag ) ->
+                    test name <|
+                        \() ->
+                            htmlTag [] []
+                                |> expectHtmlString ("<" ++ name ++ ">")
+                )
+                voidElements
+
+
 
 {--
-attribute vs property
 look at https://github.com/facebook/react/blob/master/src/renderers/dom/shared/HTMLDOMPropertyConfig.js
-void elements https://github.com/nthtran/vdom-to-html/blob/master/void-elements.js
 attributes with booleans https://github.com/nthtran/vdom-to-html/blob/master/create-attribute.js#L32
 attributeNS  https://github.com/elm-lang/virtual-dom/blob/master/src/Native/VirtualDom.js#L1455
 --}
