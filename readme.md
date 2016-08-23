@@ -21,3 +21,5 @@ attributes per html tag such as accept-charset is only for forms http://package.
 validation for things such as http://www.w3schools.com/tags/att_meta_http_equiv.asp
 
 deprecation warnings for things such as `keygen`
+
+validate numeric values https://github.com/facebook/react/blob/master/src/renderers/dom/shared/HTMLDOMPropertyConfig.js#L53

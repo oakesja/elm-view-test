@@ -19,8 +19,10 @@ import Dom
 all : Test
 all =
     describe "htmlToString"
-        [ typesOfDomNodesTests
-        , htmlAttributes
+        [ typesOfDomNodesTest
+        , attributeNameTest
+        , booleanAttributeTest
+        , specialAttributeTest
         , voidElementTest
         ]
 
@@ -29,9 +31,9 @@ type Msg
     = Click
 
 
-typesOfDomNodesTests : Test
-typesOfDomNodesTests =
-    describe "it can handle a"
+typesOfDomNodesTest : Test
+typesOfDomNodesTest =
+    describe "it handles the virtual dom node types"
         [ test "regular node" <|
             \() ->
                 div [] []
@@ -41,10 +43,6 @@ typesOfDomNodesTests =
                 text "test"
                     |> expectHtmlString "test"
         , test "keyed node" <|
-            \() ->
-                Html.Keyed.ol [] [ ( "child1", li [] [ text "item1" ] ) ]
-                    |> expectHtmlString "<ol><li>item1</li></ol>"
-        , test "custom node" <|
             \() ->
                 Html.Keyed.ol [] [ ( "child1", li [] [ text "item1" ] ) ]
                     |> expectHtmlString "<ol><li>item1</li></ol>"
@@ -60,33 +58,34 @@ typesOfDomNodesTests =
         ]
 
 
-htmlAttributes : Test
-htmlAttributes =
-    describe "it can handle html attributes"
-        [ test "basic attribute with string values" <|
+attributeNameTest : Test
+attributeNameTest =
+    describe "it writes the correct names for attributes"
+        [ test "basic attributes that don't need changed" <|
             \() ->
-                div [ id "testId" ] []
+                div [ id "testId" ]
+                    []
                     |> expectHtmlString "<div id=\"testId\"></div>"
-          -- boolean ones are weird hidden is only visible for True, checkbox is never visible, and download does ="true|false"
-          -- , test "basic attribute with boolean values" <|
-          --     \() ->
-          --         div [ hidden True ] []
-          --             |> expectHtmlString "<div id=\"testId\"></div>"
         , test "acceptCharset maps to accept-charset" <|
             \() ->
-                Html.form [ acceptCharset "ISO-8859-1" ] []
+                Html.form [ acceptCharset "ISO-8859-1" ]
+                    []
                     |> expectHtmlString "<form accept-charset=\"ISO-8859-1\"></form>"
         , test "className maps to class" <|
             \() ->
-                div [ class "testClass" ] []
+                div [ class "testClass" ]
+                    []
                     |> expectHtmlString "<div class=\"testClass\"></div>"
-        , test "htmlFor maps to for" <|
+        , test "httpEquiv maps to http-equiv" <|
             \() ->
-                VirtualDom.node "meta" [ httpEquiv "refresh" ] []
+                VirtualDom.node "meta"
+                    [ httpEquiv "refresh" ]
+                    []
                     |> expectHtmlString "<meta http-equiv=\"refresh\">"
         , test "defaultValue maps to value" <|
             \() ->
-                input [ defaultValue "defaultText" ] []
+                input [ defaultValue "defaultText" ]
+                    []
                     |> expectHtmlString "<input value=\"defaultText\">"
         , test "downloadAs maps to download" <|
             \() ->
@@ -94,13 +93,35 @@ htmlAttributes =
                     |> expectHtmlString "<a download=\"test.txt\"></a>"
         , test "classList combines the applicable classes into a single string" <|
             \() ->
-                div [ classList [ ( "class1", True ), ( "class2", False ), ( "class3", True ) ] ] []
+                div [ classList [ ( "class1", True ), ( "class2", False ), ( "class3", True ) ] ]
+                    []
                     |> expectHtmlString "<div class=\"class1 class3\"></div>"
         , test "type' maps to type" <|
             \() ->
                 button [ type' "submit" ] []
                     |> expectHtmlString "<button type=\"submit\"></button>"
-        , test "style attributes are combined into a single string" <|
+        ]
+
+
+booleanAttributeTest : Test
+booleanAttributeTest =
+    describe "it handles attributes with boolean values"
+        [ test "boolean attributes that are true are used" <|
+            \() ->
+                div [ hidden True ] []
+                    |> expectHtmlString "<div hidden></div>"
+        , test "boolean attributes that are false are not used" <|
+            \() ->
+                div [ hidden False ] []
+                    |> expectHtmlString "<div></div>"
+          -- download
+        ]
+
+
+specialAttributeTest : Test
+specialAttributeTest =
+    describe "it handles special attributes"
+        [ test "style attributes are combined into a single string" <|
             \() ->
                 div
                     [ style
@@ -152,7 +173,7 @@ voidElementTest =
             , ( "wbr", VirtualDom.node "wbr" )
             ]
     in
-        describe "it can handle html elements that are should not have an end tag" <|
+        describe "it handles html elements that should not have an end tag" <|
             List.map
                 (\( name, htmlTag ) ->
                     test name <|
@@ -166,7 +187,6 @@ voidElementTest =
 
 {--
 look at https://github.com/facebook/react/blob/master/src/renderers/dom/shared/HTMLDOMPropertyConfig.js
-attributes with booleans https://github.com/nthtran/vdom-to-html/blob/master/create-attribute.js#L32
 attributeNS  https://github.com/elm-lang/virtual-dom/blob/master/src/Native/VirtualDom.js#L1455
 --}
 
