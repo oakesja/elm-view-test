@@ -10,7 +10,7 @@ import Html.Keyed
 import Html.Lazy
 import Json.Encode
 import VirtualDom
-import Dom
+import Private.ViewTest exposing (htmlToString)
 
 
 -- rename to virtual dom tests
@@ -193,5 +193,5 @@ attributeNS  https://github.com/elm-lang/virtual-dom/blob/master/src/Native/Virt
 
 expectHtmlString : String -> Html msg -> Expectation
 expectHtmlString expected actualHtml =
-    Dom.htmlToString actualHtml
+    htmlToString actualHtml
         |> Expect.equal expected

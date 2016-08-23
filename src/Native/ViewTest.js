@@ -1,4 +1,4 @@
-var _user$project$Native_Dom = function () {
+var _user$project$Native_ViewTest = function () {
   var cheerio = require('cheerio')
 
   // var STYLE_KEY = 'STYLE'
