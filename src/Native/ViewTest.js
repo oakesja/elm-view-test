@@ -118,7 +118,8 @@ var _user$project$Native_ViewTest = function () {
   }
 
   var toCheerio = function (html) {
-    return cheerio.load(html)
+    var cheerioInstance = cheerio.load(html)
+    return cheerioInstance
   }
 
   var find = function (query, cheerioInstance) {
@@ -126,25 +127,19 @@ var _user$project$Native_ViewTest = function () {
     var found = cheerioInstance(query)
 
     for (var i = 0; i < found.length; i++) {
-      nodes.push(cheerio.load(found[i]))
+      nodes.push(cheerio.load(found[i])('*'))
     }
-
     return _elm_lang$core$Native_List.fromArray(nodes)
   }
 
-  var contains = function (query, cheerioInstance) {
-    var nodeText = cheerioInstance.html()
-    return nodeText.indexOf(query) > -1
-  }
+  var children = function (query, cheerioInstance) {
+    var nodes = []
+    var found = cheerioInstance(query).children()
 
-  var findById = function (id, cheerioInstance) {
-    var ele = cheerioInstance('#' + id)
-    if (ele) {
-      // console.log(ele.length)
-      return _elm_lang$core$Maybe$Just(ele)
-    } else {
-      return _elm_lang$core$Maybe$Nothing
+    for (var i = 0; i < found.length; i++) {
+      nodes.push(cheerio.load(found[i])('*'))
     }
+    return _elm_lang$core$Native_List.fromArray(nodes)
   }
 
   var text = function (cheerioInstance) {
@@ -155,8 +150,7 @@ var _user$project$Native_ViewTest = function () {
     htmlToString: htmlToString,
     stringToCheerio: toCheerio,
     find: F2(find),
-    findById: F2(findById),
-    contains: F2(contains),
+    children: F2(children),
     text: text
   }
 }()
