@@ -1,6 +1,4 @@
 var _user$project$Native_ViewTest = function () {
-  var cheerio = require('cheerio')
-
   // var STYLE_KEY = 'STYLE'
   // var EVENT_KEY = 'EVENT'
   // var ATTR_KEY = 'ATTR'
@@ -117,40 +115,41 @@ var _user$project$Native_ViewTest = function () {
     return '</' + node.tag + '>'
   }
 
-  var toCheerio = function (html) {
-    var cheerioInstance = cheerio.load(html)
-    return cheerioInstance
-  }
-
-  var find = function (query, cheerioInstance) {
-    var nodes = []
-    var found = cheerioInstance(query)
-
-    for (var i = 0; i < found.length; i++) {
-      nodes.push(cheerio.load(found[i])('*'))
+  var toDomNode = function (node) {
+    if (node.type === 'text')
+      return _user$project$ViewTest$Text(_user$project$ViewTest$TextNode(node.text))
+    if (node.type === 'node') {
+      var attrs = []
+      for (var key in node.facts) {
+        attrs.push(A2(
+          _user$project$ViewTest$Attribute,
+          key,
+          node.facts[key]
+        ))
+      }
+      var children = []
+      for (var i = 0; i < node.children.length; i++) {
+        children.push(toDomNode(node.children[i]))
+      }
+      var domNode = A3(
+        _user$project$ViewTest$TaggedNode,
+        node.tag,
+        _elm_lang$core$Native_List.fromArray(attrs),
+        _elm_lang$core$Native_List.fromArray(children)
+      )
+      return _user$project$ViewTest$Tag(domNode)
     }
-    return _elm_lang$core$Native_List.fromArray(nodes)
-  }
-
-  var children = function (query, cheerioInstance) {
-    var nodes = []
-    var found = cheerioInstance(query).children()
-
-    for (var i = 0; i < found.length; i++) {
-      nodes.push(cheerio.load(found[i])('*'))
-    }
-    return _elm_lang$core$Native_List.fromArray(nodes)
-  }
-
-  var text = function (cheerioInstance) {
-    return cheerioInstance.text()
+    if (node.type === 'keyed-node')
+      return {}
+    if (node.type === 'tagger')
+      return {}
+    if (node.type === 'thunk')
+      return {}
+    return {}
   }
 
   return {
     htmlToString: htmlToString,
-    stringToCheerio: toCheerio,
-    find: F2(find),
-    children: F2(children),
-    text: text
+    toDomNode: toDomNode
   }
 }()
