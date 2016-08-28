@@ -2,8 +2,6 @@
 TODO goals
 
 # Installation
-sudo npm install -g cheerio
-
 
 # Quickstart
 
